@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="nest_api" schema="public" type="PostgreSQL - 10.14">
+   <sequences>
+      <sequence increment="1" name="photo_id_seq" startValue="1"/>
+      <sequence increment="1" name="user_id_seq" startValue="1"/>
+   </sequences>
+   <tables>
+      <table name="photo" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('photo_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="url" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="userId" nullable="true" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="id" foreignKey="FK_4494006ff358f754d07df5ccc87" implied="false" onDeleteCascade="false" schema="public" table="user"/>
+         </column>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PK_723fa50bf70dcfd06fb5a44d4ff" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+      </table>
+      <table name="user" numRows="0" remarks="" schema="public" type="TABLE">
+         <column autoUpdated="true" defaultValue="nextval('user_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial" typeCode="4">
+            <child column="userId" foreignKey="FK_4494006ff358f754d07df5ccc87" implied="false" onDeleteCascade="false" schema="public" table="photo"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="name" nullable="false" remarks="" size="2147483647" type="varchar" typeCode="12"/>
+         <primaryKey column="id" sequenceNumberInPK="1"/>
+         <index name="PK_cace4a159ff9f2512dd42373760" unique="true">
+            <column ascending="true" name="id"/>
+         </index>
+      </table>
+   </tables>
+</database>
