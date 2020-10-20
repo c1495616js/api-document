@@ -9,6 +9,27 @@
 We want to know how healthy about the codes and how database looks like.
 If we can have some tool automatically generating these reports while pipeline.
 
+## Structure
+
+The difficult part running in github action is `schemaspy`,
+
+1. We run `backend` first, using typeorm syncronize `entity` with database table.
+
+```yml
+ - name: Build Database
+        run: docker-compose --file docker-compose.yml up -d --build backend
+```
+
+1. Generating `jest coverage` and `typedoc` is compared easier as we don't need any database.
+
+1. I found `schemaspy` in docker-compose won't wait until `backend` syncronizing database, therefore
+   we have to run two time docker-compose, first time is for generating database and table, then second time is generating `schemaspy`.
+
+```yml
+- name: Generate Schemaspy
+        run: docker-compose --file docker-compose.yml up --build schemaspy
+```
+
 ## Installing
 
 ```bash
@@ -72,6 +93,7 @@ npm i @nestjs/typeorm typeorm pg
 ```yml
 schemaspy:
   image: schemaspy/schemaspy:latest
+  user: ${UID}:${GID}
   depends_on:
     - postgres
     - backend
