@@ -16,8 +16,8 @@ The difficult part running in github action is `schemaspy`,
 1. We run `backend` first, using typeorm syncronize `entity` with database table.
 
 ```yml
- - name: Build Database
-        run: docker-compose --file docker-compose.yml up -d --build backend
+- name: Build Database
+  run: docker-compose --file docker-compose.yml up -d --build backend
 ```
 
 1. Generating `jest coverage` and `typedoc` is compared easier as we don't need any database.
@@ -27,7 +27,7 @@ The difficult part running in github action is `schemaspy`,
 
 ```yml
 - name: Generate Schemaspy
-        run: docker-compose --file docker-compose.yml up --build schemaspy
+  run: docker-compose --file docker-compose.yml up --build schemaspy
 ```
 
 ## Installing
