@@ -1,0 +1,82 @@
+version: "3"
+
+services:
+  ### Database #############################
+  postgres:
+    image: api-postgres
+    container_name: nest-api-database
+    build:
+      context: ./.docker/postgres
+    ports:
+      - "5435:5432"
+    environment:
+      - POSTGRES_MULTIPLE_DATABASES="nest_api","nest_api_test","sonar"
+      - POSTGRES_USER=nestapi
+      - POSTGRES_PASSWORD=nest123
+    volumes:
+      - ./.docker/postgres:/docker-entrypoint-initdb.d
+    networks:
+      - backend
+
+  ### Backend #############################
+  backend:
+    image: nest-api
+    container_name: nest
+    stdin_open: true
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - POSTGRESQL_DATABASE=nest_api
+      - POSTGRESQL_USER=nestapi
+      - POSTGRESQL_PASSWORD=nest123
+      - DB_TEST_DATABASE=nest_api_test
+    expose:
+      - "4000"
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - postgres
+    networks:
+      - backend
+
+  ### Schemaspy #############################
+  schemaspy:
+    image: schemaspy/schemaspy:latest
+    depends_on:
+      - postgres
+      - backend
+    command: ["-configFile", "/config/schemaspy.properties"]
+    volumes:
+      - ./backend/documentation/schema:/output
+      - ./backend/schemaspy.properties:/config/schemaspy.properties
+    networks:
+      - backend
+
+  ### Sonarqube ###############################
+  sonarqube:
+    image: sonarqube:8.2-community
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://postgres:5432/sonar
+      SONAR_JDBC_USERNAME: nestapi # database username
+      SONAR_JDBC_PASSWORD: nest123 # database password
+    ports:
+      - "9000:9000"
+    depends_on:
+      - postgres
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: "bridge"
+
+volumes:
+  postgres:
