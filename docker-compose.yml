@@ -50,6 +50,7 @@ services:
   ### Schemaspy #############################
   schemaspy:
     image: schemaspy/schemaspy:latest
+    user: ${UID}:${GID}
     depends_on:
       - postgres
       - backend
