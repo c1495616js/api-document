@@ -24,6 +24,8 @@ documentation/sonar
 
 ## Typedoc
 
+![typedoc](https://i.imgur.com/03uvos3.png)
+
 ```bash
 npm i -D typedoc
 ```
@@ -75,6 +77,31 @@ schemaspy:
     - ./backend/schemaspy.properties:/config/schemaspy.properties ## read schemaspy config
   networks:
     - backend
+```
+
+## Jest Coverage
+
+![jest](https://i.imgur.com/RMPl2pT.png)
+
+in `package.json`,
+
+Setting this to documentation folder: `"coverageDirectory": "../documentation/jest"`
+
+```js
+ "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".spec.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "coverageDirectory": "../documentation/jest",
+    "testEnvironment": "node"
+  }
 ```
 
 ## SonarQube
